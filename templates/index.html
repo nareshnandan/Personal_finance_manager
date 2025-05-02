@@ -8,13 +8,13 @@
 </head>
 <body>
 
-<div class="container">
-    <h1>💰 Personal Finance Manager</h1>
-    
+<div class="container mt-4">
+    <h1 class="text-center">💰 Personal Finance Manager</h1>
+
     <div class="row mt-5">
-        <!-- Income Section -->
+        <!-- Add Income -->
         <div class="col-md-6">
-            <div class="card p-4 mb-4">
+            <div class="card p-4 shadow">
                 <h3>Add Income</h3>
                 <form method="POST" action="/">
                     <input type="text" class="form-control mb-2" name="income_source" placeholder="Source" required>
@@ -22,25 +22,11 @@
                     <button class="btn btn-primary" type="submit" name="action" value="income">Add Income</button>
                 </form>
             </div>
-
-            <div class="card p-4">
-                <h4>Income List</h4>
-                <ul class="list-group">
-                    {% for item in income %}
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ item.source }}</span>
-                            <span>₹ {{ item.amount }}</span>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item text-muted">No income added yet.</li>
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
 
-        <!-- Expense Section -->
+        <!-- Add Expense -->
         <div class="col-md-6">
-            <div class="card p-4 mb-4">
+            <div class="card p-4 shadow">
                 <h3>Add Expense</h3>
                 <form method="POST" action="/">
                     <input type="text" class="form-control mb-2" name="expense_category" placeholder="Category" required>
@@ -48,22 +34,67 @@
                     <button class="btn btn-danger" type="submit" name="action" value="expense">Add Expense</button>
                 </form>
             </div>
-
-            <div class="card p-4">
-                <h4>Expense List</h4>
-                <ul class="list-group">
-                    {% for item in expenses %}
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ item.category }}</span>
-                            <span>₹ {{ item.amount }}</span>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item text-muted">No expenses added yet.</li>
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
     </div>
+
+    <!-- Display Income -->
+    <h3 class="mt-5">Incomes</h3>
+    <ul class="list-group mb-4">
+        {% for income in incomes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ income[1] }} - ₹{{ income[2] }}
+                <span class="text-muted small">{{ income[3] }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Expenses -->
+    <h3>Expenses</h3>
+    <ul class="list-group mb-5">
+        {% for expense in expenses %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ expense[1] }} - ₹{{ expense[2] }}
+                <span class="text-muted small">{{ expense[3] }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Income -->
+<h3 class="mt-5">Incomes</h3>
+<ul class="list-group mb-4">
+    {% for income in incomes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ income[1] }} - ₹{{ income[2] }}
+            <div>
+                <span class="text-muted small me-2">{{ income[3] }}</span>
+                <form method="POST" action="/delete" style="display:inline;">
+                    <input type="hidden" name="type" value="income">
+                    <input type="hidden" name="id" value="{{ income[0] }}">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- Display Expenses -->
+<h3>Expenses</h3>
+<ul class="list-group mb-5">
+    {% for expense in expenses %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ expense[1] }} - ₹{{ expense[2] }}
+            <div>
+                <span class="text-muted small me-2">{{ expense[3] }}</span>
+                <form method="POST" action="/delete" style="display:inline;">
+                    <input type="hidden" name="type" value="expense">
+                    <input type="hidden" name="id" value="{{ expense[0] }}">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
 </div>
 
 </body>
