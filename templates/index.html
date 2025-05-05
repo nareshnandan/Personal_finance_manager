@@ -11,91 +11,111 @@
 <div class="container mt-4">
     <h1 class="text-center">💰 Personal Finance Manager</h1>
 
+    <!-- Summary Filter -->
+    <form method="POST" class="row mb-4">
+        <div class="col-md-3">
+            <label>Select Month</label>
+            <select name="month" class="form-control">
+                {% for m in range(1, 13) %}
+                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Select Year</label>
+            <select name="year" class="form-control">
+                {% for y in range(2022, 2031) %}
+                    <option value="{{ y }}" {% if y|string == selected_year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-success">Show Summary</button>
+        </div>
+    </form>
+
+    <!-- Summary -->
+    <div class="row text-center mt-4">
+        <div class="col-md-6">
+            <div class="card bg-light p-3 shadow-sm">
+                <h5>📆 Monthly Summary</h5>
+                <p>Income: ₹{{ summary.monthly_income }}</p>
+                <p>Expense: ₹{{ summary.monthly_expense }}</p>
+                <p>Savings: ₹{{ summary.monthly_savings }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-light p-3 shadow-sm">
+                <h5>📅 Yearly Summary</h5>
+                <p>Income: ₹{{ summary.yearly_income }}</p>
+                <p>Expense: ₹{{ summary.yearly_expense }}</p>
+                <p>Savings: ₹{{ summary.yearly_savings }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Income & Expense -->
     <div class="row mt-5">
-        <!-- Add Income -->
         <div class="col-md-6">
             <div class="card p-4 shadow">
                 <h3>Add Income</h3>
                 <form method="POST" action="/">
                     <input type="text" class="form-control mb-2" name="income_source" placeholder="Source" required>
                     <input type="number" class="form-control mb-2" name="income_amount" placeholder="Amount" required>
+                    <input type="date" class="form-control mb-2" name="income_date" required>
                     <button class="btn btn-primary" type="submit" name="action" value="income">Add Income</button>
                 </form>
             </div>
         </div>
-
-        <!-- Add Expense -->
         <div class="col-md-6">
             <div class="card p-4 shadow">
                 <h3>Add Expense</h3>
                 <form method="POST" action="/">
                     <input type="text" class="form-control mb-2" name="expense_category" placeholder="Category" required>
                     <input type="number" class="form-control mb-2" name="expense_amount" placeholder="Amount" required>
+                    <input type="date" class="form-control mb-2" name="expense_date" required>
                     <button class="btn btn-danger" type="submit" name="action" value="expense">Add Expense</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Display Income -->
+    <!-- Income List -->
     <h3 class="mt-5">Incomes</h3>
     <ul class="list-group mb-4">
         {% for income in incomes %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ income[1] }} - ₹{{ income[2] }}
-                <span class="text-muted small">{{ income[3] }}</span>
+                <div>
+                    <span class="text-muted small me-2">{{ income[3] }}</span>
+                    <form method="POST" action="/delete" style="display:inline;">
+                        <input type="hidden" name="type" value="income">
+                        <input type="hidden" name="id" value="{{ income[0] }}">
+                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </div>
             </li>
         {% endfor %}
     </ul>
 
-    <!-- Display Expenses -->
+    <!-- Expense List -->
     <h3>Expenses</h3>
     <ul class="list-group mb-5">
         {% for expense in expenses %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ expense[1] }} - ₹{{ expense[2] }}
-                <span class="text-muted small">{{ expense[3] }}</span>
+                <div>
+                    <span class="text-muted small me-2">{{ expense[3] }}</span>
+                    <form method="POST" action="/delete" style="display:inline;">
+                        <input type="hidden" name="type" value="expense">
+                        <input type="hidden" name="id" value="{{ expense[0] }}">
+                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </div>
             </li>
         {% endfor %}
     </ul>
 
-    <!-- Display Income -->
-<h3 class="mt-5">Incomes</h3>
-<ul class="list-group mb-4">
-    {% for income in incomes %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ income[1] }} - ₹{{ income[2] }}
-            <div>
-                <span class="text-muted small me-2">{{ income[3] }}</span>
-                <form method="POST" action="/delete" style="display:inline;">
-                    <input type="hidden" name="type" value="income">
-                    <input type="hidden" name="id" value="{{ income[0] }}">
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
-
-<!-- Display Expenses -->
-<h3>Expenses</h3>
-<ul class="list-group mb-5">
-    {% for expense in expenses %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ expense[1] }} - ₹{{ expense[2] }}
-            <div>
-                <span class="text-muted small me-2">{{ expense[3] }}</span>
-                <form method="POST" action="/delete" style="display:inline;">
-                    <input type="hidden" name="type" value="expense">
-                    <input type="hidden" name="id" value="{{ expense[0] }}">
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
-
 </div>
-
 </body>
 </html>
